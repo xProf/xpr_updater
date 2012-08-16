@@ -28,7 +28,7 @@ public class Xpr_updater
     
     public static String mineFolder = "minecraft";    
     public static String downLoadURL="http://minecraft-tyachiv.org.ua/download/";
-    public static String launcherFileName="minecraft.exe";
+    public static String launcherFileName="client.zip";
     public static Label labelMain,labelText,labelBar1,labelBar2;
     
     
@@ -66,22 +66,23 @@ public class Xpr_updater
        labelText.setAlignment(1);
        labelText.setLocation(0,0);
        labelText.setSize(300, 80);
+       labelText.setFont(null);
        labelText.setVisible(true);
        
        labelBar1.setBackground(Color.decode("#777700"));
-       labelBar1.setLocation(20,140);
+       labelBar1.setLocation(20,100);
        labelBar1.setSize(0, 20);
        labelBar1.setVisible(true);
        
        labelBar2.setBackground(Color.decode("#007777"));
-       labelBar2.setLocation(20,140);
+       labelBar2.setLocation(20,100);
        labelBar2.setSize(260, 20);
        labelBar2.setVisible(true);
        
-       okno.add(labelMain);
-       okno.add(labelText);
        okno.add(labelBar1);
        okno.add(labelBar2);
+       okno.add(labelMain);
+       okno.add(labelText);
    }
     
     public static void downLoad() 
@@ -114,6 +115,7 @@ public class Xpr_updater
                   fos.write(b, 0, count);
                   vsego=vsego+count;
                   labelText.setText("Updating:  "+(100*vsego/size)+"%");
+                  labelBar1.setSize((int)(260*vsego/size), 20);
                }    
             fos.close();
         } catch (IOException ex) {
