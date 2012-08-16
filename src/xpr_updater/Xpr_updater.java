@@ -26,7 +26,7 @@ public class Xpr_updater
 
 {
     
-    public static String mineFolder = "minecraft2";    
+    public static String mineFolder = "minecraft";    
     public static String downLoadURL="http://minecraft-tyachiv.org.ua/download/";
     public static String launcherFileName="minecraft.exe";
     public static Label labelMain,labelText,labelBar1,labelBar2;
@@ -37,7 +37,7 @@ public class Xpr_updater
     openWindow();    
     downLoad();
     if (new File(getMineDirectory()+File.separator+launcherFileName).exists() )Runtime.getRuntime().exec(getMineDirectory()+File.separator+launcherFileName);
-    System.exit(0);
+    //System.exit(0);
     }
     
     public static void openWindow() throws MalformedURLException, IOException 
@@ -69,9 +69,15 @@ public class Xpr_updater
        labelText.setVisible(true);
        
        labelBar1.setBackground(Color.decode("#777700"));
-       labelText.setLocation(0,0);
-       labelText.setSize(260, 20);
-       labelText.setVisible(true);
+       labelBar1.setLocation(20,140);
+       labelBar1.setSize(0, 20);
+       labelBar1.setVisible(true);
+       
+       labelBar2.setBackground(Color.decode("#007777"));
+       labelBar2.setLocation(20,140);
+       labelBar2.setSize(260, 20);
+       labelBar2.setVisible(true);
+       
        okno.add(labelMain);
        okno.add(labelText);
        okno.add(labelBar1);
@@ -107,7 +113,7 @@ public class Xpr_updater
                {
                   fos.write(b, 0, count);
                   vsego=vsego+count;
-                  labelText.setText("Updating "+(100*vsego/size)+"%");
+                  labelText.setText("Updating:  "+(100*vsego/size)+"%");
                }    
             fos.close();
         } catch (IOException ex) {
