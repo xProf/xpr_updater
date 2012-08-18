@@ -8,10 +8,10 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Label;
-import java.awt.image.VolatileImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 /**
@@ -31,84 +32,58 @@ public class MainWindow extends Applet
 
 {
     
-    public static String mineFolder = "minecraft";    
-    public static String downLoadURL="http://minecraft-tyachiv.org.ua/download/";
-    public static String launcherFileName="minecraft.exe";
-    public static Label labelMain,labelText,labelBar1,labelBar2;
-    public static Image art;
+    private String mineFolder = "minecraft";    
+    private String downLoadURL="http://minecraft-tyachiv.org.ua/download/";
+    private String launcherFileName="minecraft.exe";
+    private Label labelMain,labelText,labelBar1,labelBar2;
+    private Image art;
+    private JFrame okno;
+    private int percent;
     
     
     public void run() throws MalformedURLException, IOException
     {
+    percent=0;
     openWindow();    
     downLoad();
     if (new File(getMineDirectory()+File.separator+launcherFileName).exists() )Runtime.getRuntime().exec(getMineDirectory()+File.separator+launcherFileName);
-    //System.exit(0);
+    System.exit(0);
     }
     
     public void openWindow() throws MalformedURLException, IOException 
     {
-       VolatileImage img;
-       JFrame okno=new JFrame("Minecraft Updater 0.02");
+       okno=new JFrame("Minecraft Updater 0.02");
        okno.setLocation(50, 50);
-       okno.setSize(300, 200);
+       okno.setSize(400, 300);
        okno.setResizable(false);
        okno.setLayout(new BorderLayout());
        okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        okno.setVisible(true);
       
-       labelMain=new Label();
-       labelText=new Label();
-       labelBar1=new Label();
-       labelBar2=new Label();
-       
-/*    int w = getWidth() / 2;
-    int h = getHeight() / 2;
-    if ((img == null) || (img.getWidth() != w) || (img.getHeight() != h)) {
-      img = createVolatileImage(w, h);
+       drawComponents(okno.getGraphics());
     }
-   //  art=Toolkit.getDefaultToolkit().getImage("dirt.png");
-    art = ImageIO.read(Xpr_updater.class.getResource("dirt.png")).getScaledInstance(32, 32, 16);
-    Graphics g2=img.getGraphics();
-    g2.drawImage(art, 0, 0, null);
-    }    
-   */
-               
-       labelMain.setBackground(Color.decode("#440044"));
-       labelMain.setForeground(Color.decode("#ffffff"));
-       labelMain.setAlignment(1);
-       labelMain.setLocation(0,80);
-       labelMain.setSize(300, 120);
-       labelMain.setVisible(true);
-       
-       labelText.setBackground(Color.decode("#440044"));
-       labelText.setForeground(Color.decode("#ffffff"));
-       labelText.setAlignment(1);
-       labelText.setLocation(0,0);
-       labelText.setSize(300, 80);
-       labelText.setFont(new Font("Times Roman",Font.BOLD,24));
-       labelText.setVisible(true);
-       
-       labelBar1.setBackground(Color.decode("#777700"));
-       labelBar1.setLocation(20,100);
-       labelBar1.setSize(0, 20);
-       labelBar1.setVisible(true);
-       
-       labelBar2.setBackground(Color.decode("#007777"));
-       labelBar2.setLocation(20,100);
-       labelBar2.setSize(260, 20);
-       labelBar2.setVisible(true);
-       
-       okno.add(labelBar1);
-       okno.add(labelBar2);
-       okno.add(labelMain);
-       okno.add(labelText);
-   
-    }
-    
+        
+ 
     public void drawComponents(Graphics g) throws IOException
     {
-    
+    Image bgImage = ImageIO.read(Xpr_updater.class.getResource("dirt.png")).getScaledInstance(32, 32, 16);
+    //Image bdImage=ImageIO.read(xpr_updater.Xpr_updater.class.getResource(mineFolder));
+    int w=okno.getWidth();
+    int h=okno.getHeight();
+    for (int i=0;i<1+w/bgImage.getWidth(null);i++)
+        for (int j=0;j<1+h/bgImage.getHeight(null);j++)
+            g.drawImage(bgImage, i*32, j*32, null);
+          g.setColor(Color.LIGHT_GRAY);
+      String msg = "Оновлення лаунчера: "+percent+" %";
+      g.setFont(new Font(null, 1, 20));
+      FontMetrics fm = g.getFontMetrics();
+      g.drawString(msg, w / 2 - fm.stringWidth(msg) / 2, h / 2 - fm.getHeight() * 2);
+      g.setColor(Color.LIGHT_GRAY);
+      g.drawRect(40, 200, w-80, 40);
+      g.setColor(Color.GRAY);
+      for (int i=0;i<(w-100)*percent/100;i++)
+        g.drawRect(50,210,i,20);
+      
     }
     
     public void downLoad() 
@@ -116,8 +91,9 @@ public class MainWindow extends Applet
         try {
             FileOutputStream fos;
             long vsego=0;       
-            byte[] b =new byte[1024];
             int count;
+            long size;
+            byte[] b =new byte[1024];
             
             URL url = null;
              
@@ -131,7 +107,7 @@ public class MainWindow extends Applet
             BufferedInputStream inStream=new BufferedInputStream(urlConnect.getInputStream());
 
             
-            long size=urlConnect.getContentLength();
+            size=urlConnect.getContentLength();
             File mineDir=new File(getMineDirectory());
             if (!mineDir.exists()) mineDir.mkdir();
             
@@ -140,8 +116,8 @@ public class MainWindow extends Applet
                {
                   fos.write(b, 0, count);
                   vsego=vsego+count;
-                  labelText.setText("Updating:  "+(100*vsego/size)+"%");
-                  labelBar1.setSize((int)(260*vsego/size), 20);
+                  percent=(int)(100*vsego/size);
+                  drawComponents(okno.getGraphics());
                }    
             fos.close();
         } catch (IOException ex) {
