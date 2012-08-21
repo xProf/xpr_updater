@@ -35,8 +35,6 @@ public class MainWindow extends Applet
     private String mineFolder = "minecraft";    
     private String downLoadURL="http://minecraft-tyachiv.org.ua/download/";
     private String launcherFileName="minecraft.exe";
-    private Label labelMain,labelText,labelBar1,labelBar2;
-    private Image art;
     private JFrame okno;
     private int percent;
     
