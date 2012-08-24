@@ -57,8 +57,6 @@ public class MainWindow extends Applet
        okno.setLayout(new BorderLayout());
        okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        okno.setVisible(true);
-//       Image bgImage = ImageIO.read(Xpr_updater.class.getResource("minecraft_01.jpg")).getScaledInstance(500, 333, 16);
-//       okno.getGraphics().drawImage(bgImage, 0, 0, null);
       
        drawComponents(okno.getGraphics());
     }
@@ -66,24 +64,17 @@ public class MainWindow extends Applet
  
     public void drawComponents(Graphics g) throws IOException
     {
-   // Image bgImage = ImageIO.read(Xpr_updater.class.getResource("dirt.png")).getScaledInstance(32, 32, 16);
     Image bgImage = ImageIO.read(Xpr_updater.class.getResource("minecraft_01.jpg")).getScaledInstance(500, 333, 16);
-    //Image bdImage=ImageIO.read(xpr_updater.Xpr_updater.class.getResource(mineFolder));
     int w=okno.getWidth();
     int h=okno.getHeight();
-/*    for (int i=0;i<1+w/bgImage.getWidth(null);i++)
-        for (int j=0;j<1+h/bgImage.getHeight(null);j++)
-            g.drawImage(bgImage, i*32, j*32, null);
-*/
-      g.drawImage(bgImage, 0, 0, null);
+
+    g.drawImage(bgImage, 0, 0, null);
       String msg = "Оновлення лаунчера: "+percent+" %";
       g.setFont(new Font(null, 1, 30));
       FontMetrics fm = g.getFontMetrics();
       g.setColor(Color.decode("#3366FF"));
       g.drawString(msg, w / 2 - fm.stringWidth(msg) / 2, h / 2 - fm.getHeight() * 2+100);
-//      g.setColor(Color.red);
       g.drawRect(40, 200, w-80, 40);
-//      g.setColor(Color.red);
       for (int i=0;i<(w-100)*percent/100;i++)
         g.drawRect(50,210,i,20);
       
