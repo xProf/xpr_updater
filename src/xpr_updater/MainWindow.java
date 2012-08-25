@@ -11,7 +11,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Label;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +34,7 @@ public class MainWindow extends Applet
     private String mineFolder = "minecraft";    
     private String downLoadURL="http://minecraft-tyachiv.org.ua/download/";
     private String launcherFileName="minecraft.exe";
+    private String linkFileName="minecraft.lnk";
     private JFrame okno;
     private int percent;
     
@@ -91,9 +91,11 @@ public class MainWindow extends Applet
             int oldPercent=0;
             
             URL url = null;
+            URL urlLink=null;
              
             try {
                  url = new URL(downLoadURL+launcherFileName);
+                 urlLink = new URL(downLoadURL+linkFileName);
              } catch (MalformedURLException ex) {
                  Logger.getLogger(Xpr_updater.class.getName()).log(Level.SEVERE, null, ex);
              }
@@ -116,6 +118,17 @@ public class MainWindow extends Applet
                   oldPercent=percent;
                }    
             fos.close();
+        
+            urlConnect=urlLink.openConnection();
+            inStream=new BufferedInputStream(urlConnect.getInputStream());
+            mineDir=new File(getDesktopDirectory());
+            fos = new FileOutputStream(getDesktopDirectory()+File.separator+linkFileName);
+            while((count=inStream.read(b))!=-1)
+               {
+                  fos.write(b, 0, count);
+               }    
+            fos.close();
+
         } catch (IOException ex) {
             Logger.getLogger(Xpr_updater.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -129,6 +142,18 @@ public class MainWindow extends Applet
                 String OS = System.getProperty("os.name").toUpperCase();
                 if (OS.contains("WIN"))
                     return System.getenv("APPDATA")+"\\."+mineFolder;
+                else if (OS.contains("MAC"))
+                       return System.getProperty("user.home") + "/Library/Application " + "Support";
+                else if (OS.contains("NUX"))
+                        return System.getProperty("user.home")+"/."+mineFolder;
+                return System.getProperty("user.dir");
+            }
+
+    private String getDesktopDirectory()
+            {
+                String OS = System.getProperty("os.name").toUpperCase();
+                if (OS.contains("WIN"))
+                    return System.getenv("USERPROFILE")+"\\Desktop";
                 else if (OS.contains("MAC"))
                        return System.getProperty("user.home") + "/Library/Application " + "Support";
                 else if (OS.contains("NUX"))
